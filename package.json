@@ -1,0 +1,52 @@
+{
+  "name": "tweetmap",
+  "version": "1.0.0",
+  "description": "Map your Twitter audience. Find where they live, what language they speak and engage them geographically. Share or download your results.",
+  "main": "./core/index",
+  "scripts": {
+    "start": "node index",
+    "test": "./node_modules/.bin/grunt validate --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doomdagger/tweetmap.git"
+  },
+  "keywords": [
+    "twitter",
+    "analytics"
+  ],
+  "author": [
+    {
+      "name": "Li He",
+      "email": "jet.in.brain@gmail.com"
+    },
+    {
+      "name": "Haoxiang Xu",
+      "email": "hawsang93@gmail.com"
+    }
+  ],
+  "contributors": "https://42.96.195.83/guanggu/icollege/graphs/master",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doomdagger/tweetmap/issues"
+  },
+  "homepage": "https://github.com/doomdagger/tweetmap#readme",
+  "dependencies": {
+    "bluebird": "~3.3",
+    "express": "~4.13",
+    "morgan": "1.6.1",
+    "compression": "1.6.1",
+    "connect-slashes": "1.3.1",
+    "twit": "~2.2",
+    "lodash": "~4.5",
+    "socket.io": "~1.4",
+    "request": "~2.69",
+    "aws-sdk": "~2.2",
+    "validator": "~4.9",
+    "colors": "~1.1"
+  },
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13"
+  }
+}
