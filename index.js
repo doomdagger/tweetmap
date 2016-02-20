@@ -1,11 +1,9 @@
 // # tweetmap Startup
 // Orchestrates the startup of tweetmap when run from command line.
-var express,
-    tweetmap,
+var tweetmap,
     errors;
 
 // Proceed with startup
-express = require('express');
 tweetmap = require('./core');
 errors = require('./core/server/errors');
 

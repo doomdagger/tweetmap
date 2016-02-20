@@ -77,9 +77,6 @@ ConfigManager.prototype.set = function (config) {
             config:           this._config.paths.config || path.join(appRoot, 'config.js'),
             configExample:    path.join(appRoot, 'config.example.js'),
             corePath:         corePath
-        },
-        server: {
-            compress: true
         }
     });
 

@@ -2,11 +2,11 @@
  * Created by lihe on 2/19/16.
  */
 
-var Promise = require('bluebird');
+function init(socket) {
 
-function init() {
-
-    return Promise.resolve();
+    socket.on('message', function () {
+        console.log('hello');
+    })
 }
 
-exports.init = init;
+module.exports = init;

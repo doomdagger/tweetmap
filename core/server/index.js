@@ -2,10 +2,11 @@
 
 // Module dependencies
 var express     = require('express'),
+    socket      = require('socket.io'),
     compress    = require('compression'),
     logger      = require('morgan'),
     path        = require('path'),
-    slashes         = require('connect-slashes'),
+    slashes     = require('connect-slashes'),
 
     api         = require('./api'),
     config      = require('./config'),
@@ -18,10 +19,12 @@ var express     = require('express'),
 
 // ## Initializes the application.
 // Sets up the express server instance, socket.io instance
-// Instantiates the tweetmap singleton, configuration, models, data, api.
+// Instantiates the configuration, models, data.
 function init(options) {
     // Get reference to an express app instance.
-    var app = express();
+    var app = express(),
+    // Get reference to an socket.io app instance.
+        io = socket();
 
     // ### Initialisation
     // The server and its dependencies require a populated config
@@ -30,38 +33,43 @@ function init(options) {
 
     // Load our config.js file from the local file system.
     return config.load(options.config).then(function () {
-        // Initialise the models
+        // Initialise the models, create dynamoDB tables
         return models.init();
     }).then(function () {
-        // Initialize data
+        // Initialize data, start twitter streaming
         return data.init();
-    }).then(function () {
-        // Initialize socket.io
-        return api.init();
     }).then(function () {
         // ##Configuration the express
         var logging  = config.logging;
 
         // enabled gzip compression by default
-        if (compress !== false) {
+        if (config.compress !== false) {
+            // compress all requests
             app.use(compress());
         }
 
         // Logging configuration
         if (logging !== false) {
             if (app.get('env') !== 'development') {
-                app.use(logger('combined', logging));
+                // Standard Apache combined log output.
+                app.use(logger('combined'));
             } else {
-                app.use(logger('dev', logging));
+                // Concise output colored by response status for development use.
+                app.use(logger('dev'));
             }
         }
 
-        // one year
-        app.use('/', express.static(path.join(config.corePath, '/client'), {maxAge: ONE_DAY_MS}));
+        // place static assets routing before slashes configuration
+        app.use('/public', express.static(path.join(config.paths.corePath, '/client'), {maxAge: ONE_DAY_MS}));
         // Add in all trailing slashes
         app.use(slashes(true));
 
-        return new Server(app);
+        // ##Configuration the socket.io
+
+        // the attached server will serve the client files. Defaults to true.
+        io.serveClient(true);
+
+        return new Server(app, io);
     });
 }
 
