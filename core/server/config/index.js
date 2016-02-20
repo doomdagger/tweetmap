@@ -3,7 +3,6 @@
 var path          = require('path'),
     Promise       = require('bluebird'),
     fs            = require('fs'),
-    url           = require('url'),
     _             = require('lodash'),
 
     validator     = require('validator'),
@@ -44,8 +43,6 @@ ConfigManager.prototype.init = function (rawConfig) {
  * @param {Object} config Only accepts an object at the moment.
  */
 ConfigManager.prototype.set = function (config) {
-    var localPath = '';
-
     // Merge passed in config object onto our existing config object.
     // We're using merge here as it doesn't assign `undefined` properties
     // onto our cached config object.  This allows us to only update our

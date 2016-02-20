@@ -8,7 +8,6 @@ var express = require('express'),
     path = require('path'),
     slashes = require('connect-slashes'),
 
-    api = require('./api'),
     config = require('./config'),
     data = require('./data'),
     models = require('./models'),

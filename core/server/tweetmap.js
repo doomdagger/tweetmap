@@ -2,8 +2,6 @@
 // Handles the creation of an HTTP Server and Websocket Server
 
 var Promise = require('bluebird'),
-    http = require('http'),
-    fs = require('fs'),
     errors = require('./errors'),
     config = require('./config'),
     api = require('./api');

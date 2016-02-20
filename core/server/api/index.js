@@ -6,7 +6,7 @@ function init(socket) {
 
     socket.on('message', function () {
 
-    })
+    });
 }
 
 module.exports = init;
