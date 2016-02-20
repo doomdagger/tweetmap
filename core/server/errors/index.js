@@ -125,19 +125,6 @@ errors = {
         this.logError(err, context, help);
 
         return this.rejectError(err, context, help);
-    },
-
-    logErrorWithRedirect: function (msg, context, help, redirectTo, req, res) {
-        /*jshint unused:false*/
-        var self = this;
-
-        return function () {
-            self.logError(msg, context, help);
-
-            if (_.isFunction(res.redirect)) {
-                res.redirect(redirectTo);
-            }
-        };
     }
 };
 
@@ -151,8 +138,7 @@ _.each([
     'logError',
     'logAndThrowError',
     'logAndRejectError',
-    'logErrorAndExit',
-    'logErrorWithRedirect'
+    'logErrorAndExit'
 ], function (funcName) {
     errors[funcName] = errors[funcName].bind(errors);
 });

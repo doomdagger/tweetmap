@@ -18,7 +18,6 @@ function Server(rootApp, socketApp) {
     this.rootApp = rootApp;
     this.socketApp = socketApp;
     this.httpServer = null;
-    this.socketServer = null;
     this.connections = {};
     this.connectionId = 0;
 
@@ -26,22 +25,26 @@ function Server(rootApp, socketApp) {
     this.config = config;
 }
 
-
 /**
- * Start express, rootApp
+ * Starts the tweetmap servers listening on the configured ports.
  * @returns {bluebird|exports|module.exports}
- * @private
  */
-Server.prototype._startRootApp = function () {
+Server.prototype.start = function () {
     var self = this,
-        rootApp = self.rootApp;
+        rootApp = self.rootApp,
+        socketApp = self.socketApp;
 
-    // ## Start tweetmap rootApp
+
+    // ## start tweetmap application
     return new Promise(function (resolve) {
         self.httpServer = rootApp.listen(
             config.server.port,
             config.server.host
         );
+
+        // attach http server to socket.io
+        socketApp.attach(self.httpServer);
+        socketApp.on('connection', api);
 
         self.httpServer.on('error', self.error);
         self.httpServer.on('connection', self.connection.bind(self));
@@ -53,91 +56,45 @@ Server.prototype._startRootApp = function () {
 };
 
 /**
- *
- * @returns {bluebird|exports|module.exports}
- * @private
+ * Returns a promise that will be fulfilled when the server stops.
+ * If the server has not been started, the promise will be fulfilled
+ * immediately.
  */
-Server.prototype._startSocketApp = function () {
-    var self = this,
-        socketApp = self.socketApp;
-
-    // ## start tweetmap socketApp
-    return new Promise(function (resolve) {
-        // create http server
-        self.socketServer = http.createServer();
-        self.socketServer.listen(config.websocket.port);
-
-        self.socketServer.on('error', self.error);
-        self.socketServer.on('listening', function () {
-            console.log(
-                'websocket server is listening on'.green,
-                config.websocket.port
-            );
-            resolve(self);
-        });
-
-        // attach http server to socket.io
-        socketApp.attach(self.socketServer);
-        socketApp.on('connection', api);
-    });
-};
-
-/**
- * Starts the tweetmap servers listening on the configured ports.
- * @return {Promise}
- */
-Server.prototype.start = function () {
-    var self = this;
-
-    return Promise.all([self._startSocketApp(), self._startRootApp()]);
-};
-
-// Returns a promise that will be fulfilled when the server stops.
-// If the server has not been started, the promise will be fulfilled
-// immediately
 Server.prototype.stop = function () {
     var self = this;
 
-    var stopRootApp = new Promise(function (resolve) {
+    return new Promise(function (resolve) {
         if (self.httpServer === null) {
             resolve(self);
         } else {
             self.httpServer.close(function () {
                 self.httpServer = null;
+                self.logShutdownMessages();
                 resolve(self);
             });
 
             self.closeConnections();
         }
     });
-
-    var stopSocketApp = new Promise(function (resolve) {
-        if (self.socketServer === null) {
-            resolve(self);
-        } else {
-            self.socketServer.close(function () {
-                self.socketServer = null;
-                resolve(self);
-            });
-        }
-    });
-
-    return Promise.resolve([stopRootApp, stopSocketApp]).then(function () {
-        self.logShutdownMessages();
-    });
 };
 
-// Restarts the tweetmap application
+/**
+ * Restarts the tweetmap application
+ */
 Server.prototype.restart = function () {
     return this.stop().then(this.start.bind(this));
 };
 
-// To be called after `stop`
+/**
+ * To be called after `stop`
+ */
 Server.prototype.hammertime = function () {
     console.log('Can\'t touch this'.green);
 
     return Promise.resolve(this);
 };
+
+// ### Helper functions below
 
 Server.prototype.connection = function (socket) {
     var self = this;
@@ -219,10 +176,9 @@ Server.prototype.logStartMessages = function () {
         }
         process.exit(0);
     }
+
     // ensure that tweetmap exits correctly on Ctrl+C and SIGTERM
-    process.
-    removeAllListeners('SIGINT').on('SIGINT', shutdown).
-    removeAllListeners('SIGTERM').on('SIGTERM', shutdown);
+    process.removeAllListeners('SIGINT').on('SIGINT', shutdown).removeAllListeners('SIGTERM').on('SIGTERM', shutdown);
 };
 
 Server.prototype.logShutdownMessages = function () {

@@ -1,20 +1,20 @@
 // # Bootup
 
 // Module dependencies
-var express     = require('express'),
-    socket      = require('socket.io'),
-    compress    = require('compression'),
-    logger      = require('morgan'),
-    path        = require('path'),
-    slashes     = require('connect-slashes'),
+var express = require('express'),
+    socket = require('socket.io'),
+    compress = require('compression'),
+    logger = require('morgan'),
+    path = require('path'),
+    slashes = require('connect-slashes'),
 
-    api         = require('./api'),
-    config      = require('./config'),
-    data        = require('./data'),
-    models      = require('./models'),
-    Server      = require('./tweetmap'),
+    api = require('./api'),
+    config = require('./config'),
+    data = require('./data'),
+    models = require('./models'),
+    Server = require('./tweetmap'),
 
-    ONE_DAY_MS  = 86400000;
+    ONE_DAY_MS = 86400000;
 
 
 // ## Initializes the application.
@@ -40,7 +40,7 @@ function init(options) {
         return data.init();
     }).then(function () {
         // ##Configuration the express
-        var logging  = config.logging;
+        var logging = config.logging;
 
         // enabled gzip compression by default
         if (config.compress !== false) {

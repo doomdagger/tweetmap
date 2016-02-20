@@ -72,7 +72,7 @@ config = {
             timeout_ms: 60 * 1000
         },
 
-        logging: false
+        logging: true
     }
 };
 
