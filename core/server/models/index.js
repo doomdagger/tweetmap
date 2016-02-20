@@ -5,7 +5,6 @@
 var Promise = require('bluebird');
 
 function init() {
-
     return Promise.resolve();
 }
 

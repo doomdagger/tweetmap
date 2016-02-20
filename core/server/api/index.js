@@ -3,9 +3,7 @@
  */
 
 function init(socket) {
-
     socket.on('message', function () {
-
     });
 }
 

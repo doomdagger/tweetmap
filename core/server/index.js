@@ -15,7 +15,6 @@ var express = require('express'),
 
     ONE_DAY_MS = 86400000;
 
-
 // ## Initializes the application.
 // Sets up the express server instance, socket.io instance
 // Instantiates the configuration, models, data.

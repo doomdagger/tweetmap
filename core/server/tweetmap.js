@@ -32,7 +32,6 @@ Server.prototype.start = function () {
         rootApp = self.rootApp,
         socketApp = self.socketApp;
 
-
     // ## start tweetmap application
     return new Promise(function (resolve) {
         self.httpServer = rootApp.listen(
@@ -182,6 +181,5 @@ Server.prototype.logStartMessages = function () {
 Server.prototype.logShutdownMessages = function () {
     console.log('tweetmap is closing connections'.red);
 };
-
 
 module.exports = Server;
