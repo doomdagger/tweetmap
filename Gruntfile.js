@@ -83,13 +83,6 @@ var configureGrunt = function (grunt) {
 
         // tweetmap has a number of useful tasks that we use every day in development. Tasks marked as *Utility* are used
         // by grunt to perform current actions, but isn't useful to developers.
-        //
-        // Skip ahead to the section on:
-        //
-        // * [Building assets](#building%20assets):
-        //     `grunt init`, `grunt` & `grunt prod` or live reload with `grunt dev`
-        // * [Testing](#testing):
-        //     `grunt validate`, the `grunt test-*` sub-tasks or generate a coverage report with `grunt coverage`.
 
         // ### Documentation
         // Run `grunt docs` to generate annotated source code using the documentation described in the code comments.

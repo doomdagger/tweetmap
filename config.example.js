@@ -18,10 +18,6 @@ config = {
             port: '1222'
         },
 
-        websocket: {
-            port: '3113'
-        },
-
         aws: {
             apiVersion: '2016-02-19'
         },
@@ -41,18 +37,12 @@ config = {
         url: 'http://localhost:1222',
 
         // #### Server
-        // Can be host & port (default), or socket
+        // Can be host & port (default)
         server: {
             // Host to be passed to node's `net.Server#listen()`
             host: '127.0.0.1',
             // Port to be passed to node's `net.Server#listen()`
             port: '1222'
-        },
-
-        // ### Websocket
-        websocket: {
-            // Port to be passed to socket.io's `io#listen()`
-            port: '3113'
         },
 
         // ### AWS configuration
