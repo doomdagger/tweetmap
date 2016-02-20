@@ -5,7 +5,7 @@
 function init(socket) {
 
     socket.on('message', function () {
-        console.log('hello');
+
     })
 }
 
