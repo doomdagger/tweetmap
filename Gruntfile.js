@@ -61,8 +61,8 @@ var configureGrunt = function (grunt) {
                 src: ['.'],
                 options: {
                     onlyUpdated: true,
-                    exclude: 'node_modules,bower_components,content,core/client,*test,*doc*,' +
-                    '*vendor,config.js,*buil*,.dist*,.idea,.git*,.travis.yml,.bower*,.editorconfig,.js*,*.md'
+                    exclude: 'node_modules,content,core/client,*test,*doc*,' +
+                    '*vendor,config.js,*buil*,.dist*,.idea,.git*,.travis.yml,.js*,*.md'
                 }
             }
         },

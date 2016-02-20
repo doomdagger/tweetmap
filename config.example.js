@@ -27,7 +27,9 @@ config = {
             consumer_secret: 'U8OzaisdkeffFBPbbsz02fUwYdCgVCl3hradRKkM7vdlN3EiLt',
             access_token: '699071431536152580-ms8sCg02vk3OyNqKJfHqHsKYPChkkfB',
             access_token_secret: 'GY4rgv6ImIgjyKC79lXFQK43yN9Btdqk0YZa6xFaGTTKf',
-            timeout_ms: 60 * 1000
+            timeout_ms: 60 * 1000,
+            keywords: ['the', 'a', 'they', 'an', 'this', 'of', 'on', 'for',
+                'and', 'at', 'is', 'am', 'are', 'from', 'it', 'to']
         }
     },
 
@@ -59,7 +61,9 @@ config = {
             access_token: '699071431536152580-ms8sCg02vk3OyNqKJfHqHsKYPChkkfB',
             access_token_secret: 'GY4rgv6ImIgjyKC79lXFQK43yN9Btdqk0YZa6xFaGTTKf',
             // optional HTTP request timeout to apply to all requests.
-            timeout_ms: 60 * 1000
+            timeout_ms: 60 * 1000,
+            keywords: ['the', 'a', 'they', 'an', 'this', 'of', 'on', 'for',
+                'and', 'at', 'is', 'am', 'are', 'from', 'it', 'to']
         },
 
         logging: true
