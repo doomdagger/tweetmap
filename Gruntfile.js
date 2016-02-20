@@ -79,7 +79,7 @@ var configureGrunt = function (grunt) {
     // Load the configuration
     grunt.initConfig(cfg);
 
-    // # Custom Tasks
+    // ## Custom Tasks
 
     // tweetmap has a number of useful tasks that we use every day in development. Tasks marked as *Utility* are used
     // by grunt to perform current actions, but isn't useful to developers.
