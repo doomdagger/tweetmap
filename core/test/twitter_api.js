@@ -12,8 +12,12 @@ var twit = new Twit({
     timeout_ms:           60*1000  // optional HTTP request timeout to apply to all requests.
 });
 
+console.log(exports === module.exports);
+
 //var stream = twit.stream('statuses/firehose');
 var stream = twit.stream('statuses/filter', {track: ["sport","love","food","job","game","business","book","education","family"]});
+
+console.log(twit.channel);
 
 stream.on('tweet', function (tweet) {
     if (tweet.coordinates) {

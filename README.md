@@ -1,5 +1,7 @@
 # tweetmap
 
+[![Build Status](https://travis-ci.com/doomdagger/tweetmap.svg?token=DAVuzKf3wdQT9dmxiY5f&branch=master)](https://travis-ci.com/doomdagger/tweetmap)
+
 The goal of this assignment is to provide you experience in developing and deploying a web application using AWS Cloud
 services. Your web application would collect Twitts and do some processing and represent the Twitts on GoogleMaps.
 Following are the required steps:  
