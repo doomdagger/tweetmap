@@ -17,12 +17,12 @@ var Promise = require('bluebird'),
  */
 Tweet = function Tweet(rawObj) {
     if (rawObj) {
-        this.id = rawObj.id_str;
+        this.id = rawObj.id.toString();
         this.text = rawObj.text;
         this.user = {
-            id: rawObj.user.id_str,
+            id: rawObj.user.id.toString(),
             name: rawObj.user.name,
-            profile_image_url: rawObj.user.profile_image_url || ''
+            profile_image_url: rawObj.user.profile_image_url
         };
         this.coordinates = {
             type: rawObj.coordinates.type,
