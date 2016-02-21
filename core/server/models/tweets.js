@@ -3,38 +3,38 @@
 
 var Promise = require('bluebird'),
 
-    config = require('../config'),
     dynamodb = require('./base'),
-    tableName = require('./schema')['tweets'].TableName,
+    errors = require('../errors'),
+    tableName = require('./schema').tweets.TableName,
 
     Tweet,
     Tweets;
 
 /**
  * Tweet object
- * @param rawObj
+ * @param {Object} rawObj
  * @constructor
  */
 Tweet = function Tweet(rawObj) {
     if (rawObj) {
-        this.id = rawObj.id;
+        this.id = rawObj.id_str;
         this.text = rawObj.text;
         this.user = {
-            id: rawObj.user.id,
+            id: rawObj.user.id_str,
             name: rawObj.user.name,
-            description: rawObj.user.description,
-            profile_image_url: rawObj.user.profile_image_url
+            profile_image_url: rawObj.user.profile_image_url || ''
         };
         this.coordinates = {
             type: rawObj.coordinates.type,
-            coordinates: rawObj.coordinates.coordinates
+            coordinates: [rawObj.coordinates.coordinates[0].toString(), rawObj.coordinates.coordinates[1].toString()]
         };
         this.place = rawObj.place.id;
         this.timestamp_ms = rawObj.timestamp_ms;
     }
 };
 
-//@TODO better ways instead of hard-coding?
+// @TODO better ways instead of hard-coding?
+
 Tweet.prototype.serialize = function () {
     var self = this;
     return {
@@ -44,7 +44,6 @@ Tweet.prototype.serialize = function () {
             M: {
                 id: {N: self.user.id},
                 name: {S: self.user.name},
-                description: {S: self.user.description},
                 profile_image_url: {S: self.user.profile_image_url}
             }
         },
@@ -54,60 +53,43 @@ Tweet.prototype.serialize = function () {
                 coordinates: {NS: self.coordinates.coordinates}
             }
         },
-        place: {N: self.place},
+        place: {S: self.place},
         timestamp_ms: {N: self.timestamp_ms}
     };
 };
 
-//@TODO better ways instead of hard-coding?
+// @TODO better ways instead of hard-coding?
+
 Tweet.prototype.unserialize = function (dbObj) {
     this.id = dbObj.id.N;
     this.text = dbObj.text.S;
     this.user = {
         id: dbObj.user.M.id.N,
         name: dbObj.user.M.name.S,
-        description: dbObj.user.M.description.S,
         profile_image_url: dbObj.user.M.profile_image_url.S
     };
     this.coordinates = {
         type: dbObj.coordinates.M.type.S,
         coordinates: dbObj.coordinates.M.coordinates.NS
     };
-    this.place = dbObj.place.N;
+    this.place = dbObj.place.S;
     this.timestamp_ms = dbObj.timestamp_ms.N;
 };
 
 Tweets = {
-    'exist': function (place, id) {
-        return new Promise(function (resolve, reject) {
-            dynamodb.getItem({
-                Key: {
-                    /* required */
-                    place: {
-                        /* AttributeValue */
-                        N: place
-                    },
-                    id: {
-                        N: id
-                    }
-                },
-                TableName: tableName, /* required */
-                ProjectionExpression: 'place, id'
-            }, function (err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
-                else     console.log(data);           // successful response
-                resolve();
-            });
-        });
-    },
-
-    'findOne': function (place, id) {
+    /**
+     * find on with place and id specified
+     * @param {String} place
+     * @param {Number} id
+     * @returns {*}
+     */
+    findOne: function (place, id) {
         return dynamodb.getItemAsync({
             Key: {
-                place: {N: place},
+                place: {S: place},
                 id: {N: id}
             },
-            TableName: tableName /* required */
+            TableName: tableName
         }).then(function (data) {
             var tweet = new Tweet();
             tweet.unserialize(data);
@@ -115,11 +97,25 @@ Tweets = {
         });
     },
 
-    'upsert': function (tweet) {
+    /**
+     * won't insert two tweets have same place and id attributes
+     * @param {Tweet} tweet
+     * @returns {*}
+     */
+    uniqueInsert: function (tweet) {
         return dynamodb.putItemAsync({
             Item: tweet.serialize(),
-            TableName: tableName, /* required */
+            TableName: tableName,
+            // ensure unique insertion
             ConditionExpression: 'attribute_not_exists(place) AND attribute_not_exists(id)'
+        }).catch(function (error) {
+            if (error.code === 'ConditionalCheckFailedException') {
+                errors.logWarn('data', 'duplicate data insertion occurs, with place ('
+                    + tweet.place + ') and id (' + tweet.id + ')');
+                return;
+            }
+            // throw any other errors
+            return Promise.reject(error);
         });
     }
 };

@@ -3,7 +3,7 @@
 // until the real function call on dynamo db object, we can safely initialize dynamo db
 // object without using Promise
 
-var AWS = require("aws-sdk"),
+var AWS = require('aws-sdk'),
     _ = require('lodash'),
     Promise = require('bluebird'),
 

@@ -2,6 +2,12 @@
  * Created by lihe on 2/19/16.
  */
 
+var num = 5;
+
+num.toString();
+
+console.log(num);
+
 var Twit = require('twit');
 
 var twit = new Twit({

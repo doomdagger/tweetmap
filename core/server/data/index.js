@@ -3,7 +3,6 @@
 
 var Promise = require('bluebird'),
 
-    config = require('../config'),
     models = require('../models');
 
 function init() {
@@ -12,8 +11,7 @@ function init() {
     twit.channel.on('tweet', function (rawObj) {
         // only store tweets with locations
         if (!!rawObj.coordinates) {
-            var tweet = new models.Tweet(rawObj);
-            console.log(tweet.serialize());
+            models.Tweets.uniqueInsert(new models.Tweet(rawObj));
         }
     });
 
