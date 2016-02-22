@@ -41,7 +41,7 @@ config = {
     // ### Development **(default)**
     development: {
         // The url to use when providing links to the site.
-        url: 'http://localhost:1222',
+        url: 'http://localhost:3000',
 
         // #### Server
         // Can be host & port (default)
@@ -49,7 +49,7 @@ config = {
             // Host to be passed to node's `net.Server#listen()`
             host: '0.0.0.0',
             // Port to be passed to node's `net.Server#listen()`
-            port: '1222'
+            port: '3000'
         },
 
         // ### AWS configuration
