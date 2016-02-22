@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/doomdagger/tweetmap#readme",
   "dependencies": {
+    "log": "~1.4",
     "bluebird": "~3.3",
     "express": "~4.13",
     "morgan": "1.6.1",
