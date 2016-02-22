@@ -14,11 +14,13 @@ config = {
         url: 'http://my-tweetmap.com',
 
         server: {
-            host: '127.0.0.1',
-            port: '1222'
+            host: '0.0.0.0',
+            port: '80'
         },
 
         aws: {
+            accessKeyId: 'AKIAJGQRH6BB352BJGQQ',
+            secretAccessKey: '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',
             region: 'us-west-2',
             apiVersion: '2016-02-19'
         },
@@ -39,19 +41,22 @@ config = {
     // ### Development **(default)**
     development: {
         // The url to use when providing links to the site.
-        url: 'http://localhost:1222',
+        url: 'http://localhost:80',
 
         // #### Server
         // Can be host & port (default)
         server: {
             // Host to be passed to node's `net.Server#listen()`
-            host: '127.0.0.1',
+            host: '0.0.0.0',
             // Port to be passed to node's `net.Server#listen()`
-            port: '1222'
+            port: '80'
         },
 
         // ### AWS configuration
         aws: {
+            // credentials
+            accessKeyId: 'AKIAJGQRH6BB352BJGQQ',
+            secretAccessKey: '61tvHxCspVqFnwRgSUXES2rfOnpMC9efrRoQ3aKE',
             // choose your own region, default settings in home directory doesn't work
             region: 'us-west-2',
             // API versions locking
