@@ -10,7 +10,7 @@ function init() {
 
     twit.channel.on('tweet', function (rawObj) {
         // only store tweets with locations
-        if (!!rawObj.coordinates) {
+        if (!!rawObj.coordinates && !!rawObj.place) {
             models.Tweets.uniqueInsert(new models.Tweet(rawObj));
         }
     });

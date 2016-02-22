@@ -5,6 +5,7 @@ var express = require('express'),
     socket = require('socket.io'),
     compress = require('compression'),
     logger = require('morgan'),
+    favicon = require('serve-favicon'),
     path = require('path'),
     slashes = require('connect-slashes'),
 
@@ -57,10 +58,17 @@ function init(options) {
             }
         }
 
+        // favicon
+        app.use(favicon(path.join(config.paths.corePath, '/shared/favicon.ico')));
         // place static assets routing before slashes configuration
         app.use('/public', express.static(path.join(config.paths.corePath, '/client'), {maxAge: ONE_DAY_MS}));
         // Add in all trailing slashes
         app.use(slashes(true));
+
+        // easiest routing policy for tweetmap
+        app.get('/', function (req, res) {
+            res.redirect('/public/index.html');
+        });
 
         // ##Configuration the socket.io
 
