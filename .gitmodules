@@ -1,3 +1,3 @@
 [submodule "core/client"]
 	path = core/client
-	url = https://github.com/LeightonStreet/Tweetmap.git
+	url = https://github.com/LeightonStreet/client
