@@ -3,7 +3,8 @@
 // until the real function call on dynamo db object, we can safely initialize dynamo db
 // object without using Promise
 
-var AWS = require('aws-sdk'),
+var https = require('https'),
+    AWS = require('aws-sdk'),
     _ = require('lodash'),
     Promise = require('bluebird'),
 
@@ -16,7 +17,14 @@ var AWS = require('aws-sdk'),
 _.extend(AWS.config, config.aws);
 
 // get the instance
-dynamodb = new AWS.DynamoDB();
+dynamodb = new AWS.DynamoDB({
+    httpOptions: {
+        agent: new https.Agent({
+            ciphers: 'ALL',
+            secureProtocol: 'TLSv1_method'
+        })
+    }
+});
 
 // promisify all functions in dynamo db
 Promise.promisifyAll(Object.getPrototypeOf(dynamodb));

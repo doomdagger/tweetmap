@@ -22,7 +22,8 @@ config = {
             accessKeyId: 'AKIAJGQRH6BB352BJGQQ',
             secretAccessKey: '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',
             region: 'us-west-2',
-            apiVersion: '2016-02-19'
+            apiVersion: '2016-02-19',
+            sslEnabled: true
         },
 
         twitter: {
@@ -60,7 +61,8 @@ config = {
             // choose your own region, default settings in home directory doesn't work
             region: 'us-west-2',
             // API versions locking
-            apiVersion: '2016-02-19'
+            apiVersion: '2016-02-19',
+            sslEnabled: true
         },
 
         // ### Twitter Stream API configuration
