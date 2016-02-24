@@ -1,12 +1,10 @@
 // # API module
 // define routing rules for websocket
 var Promise = require('bluebird'),
-    _ = require('lodash'),
-
-    routing;
+    _ = require('lodash');
 
 function init() {
-    var es = require('./es');
+    var es = exports.es = require('./es');
 
     // use closure here
     exports.routing = function (socket) {
@@ -17,9 +15,9 @@ function init() {
             es.search({
                 body: {
                     query: {
-                        query_string : {
-                            default_field : 'text',
-                            query : keywords.join(' OR ')
+                        query_string: {
+                            default_field: 'text',
+                            query: keywords.join(' OR ')
                         }
                     }
                 }
