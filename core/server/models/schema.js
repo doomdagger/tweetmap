@@ -5,12 +5,12 @@ module.exports = {
     tweets: {
         TableName: 'Tweets',
         KeySchema: [
-            {AttributeName: 'place', KeyType: 'HASH'},  // Partition key
-            {AttributeName: 'id', KeyType: 'RANGE'}  // Sort key
+            {AttributeName: 'place_id', KeyType: 'HASH'},  // Partition key
+            {AttributeName: 'tweet_id', KeyType: 'RANGE'}  // Sort key
         ],
         AttributeDefinitions: [
-            {AttributeName: 'place', AttributeType: 'S'},
-            {AttributeName: 'id', AttributeType: 'N'}
+            {AttributeName: 'place_id', AttributeType: 'S'},
+            {AttributeName: 'tweet_id', AttributeType: 'S'}
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 1,

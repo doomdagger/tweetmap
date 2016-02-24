@@ -11,7 +11,7 @@ function init() {
 
     twit.channel.on('tweet', function (rawObj) {
         // only store tweets with locations
-        if (!!rawObj.coordinates && !!rawObj.place) {
+        if (!!rawObj.coordinates && rawObj.coordinates.type === 'Point' && !!rawObj.place) {
             models.Tweets.uniqueInsert(new models.Tweet(rawObj)).catch(function (error) {
                 errors.logError(error, 'data module is in a process of streaming data to dynamodb',
                     'https://github.com/aws/aws-sdk-js/issues/862');

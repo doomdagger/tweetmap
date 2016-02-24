@@ -16,87 +16,35 @@ var Promise = require('bluebird'),
  * @constructor
  */
 Tweet = function Tweet(rawObj) {
-    if (rawObj) {
-        this.id = rawObj.id.toString();
+    if (!!rawObj) {
+        this.tweet_id = rawObj.id_str;
+        this.place_id = rawObj.place.id;
+        this.user_id = rawObj.user.id_str;
         this.text = rawObj.text;
-        this.user = {
-            id: rawObj.user.id.toString(),
-            name: rawObj.user.name,
-            profile_image_url: rawObj.user.profile_image_url
-        };
-        this.coordinates = {
-            type: rawObj.coordinates.type,
-            coordinates: [rawObj.coordinates.coordinates[0].toString(), rawObj.coordinates.coordinates[1].toString()]
-        };
-        this.place = rawObj.place.id;
+        this.username = rawObj.user.screen_name;
+        this.user_profile_image = rawObj.user.profile_image_url;
+        this.coordinates = [rawObj.coordinates.coordinates[0].toString(), rawObj.coordinates.coordinates[1].toString()];
         this.timestamp_ms = rawObj.timestamp_ms;
     }
 };
 
 // @TODO better ways instead of hard-coding?
-
 Tweet.prototype.serialize = function () {
     var self = this;
     return {
-        id: {N: self.id},
+        tweet_id: {S: self.tweet_id},
+        place_id: {S: self.place_id},
+        user_id: {S: self.user_id},
         text: {S: self.text},
-        user: {
-            M: {
-                id: {N: self.user.id},
-                name: {S: self.user.name},
-                profile_image_url: {S: self.user.profile_image_url}
-            }
-        },
-        coordinates: {
-            M: {
-                type: {S: self.coordinates.type},
-                coordinates: {NS: self.coordinates.coordinates}
-            }
-        },
-        place: {S: self.place},
+        username: {S: self.username},
+        user_profile_image: {S: self.user_profile_image},
+        coordinates: {NS: self.coordinates},
         timestamp_ms: {N: self.timestamp_ms}
     };
 };
 
-// @TODO better ways instead of hard-coding?
-
-Tweet.prototype.unserialize = function (dbObj) {
-    this.id = dbObj.id.N;
-    this.text = dbObj.text.S;
-    this.user = {
-        id: dbObj.user.M.id.N,
-        name: dbObj.user.M.name.S,
-        profile_image_url: dbObj.user.M.profile_image_url.S
-    };
-    this.coordinates = {
-        type: dbObj.coordinates.M.type.S,
-        coordinates: dbObj.coordinates.M.coordinates.NS
-    };
-    this.place = dbObj.place.S;
-    this.timestamp_ms = dbObj.timestamp_ms.N;
-};
-
+// Tweets Object
 Tweets = {
-    /**
-     * find on with place and id specified
-     * @param {String} place
-     * @param {Number} id
-     * @returns {*}
-     */
-    findOne: function (place, id) {
-        return dynamodb.getItemAsync({
-            Key: {
-                place: {S: place},
-                id: {N: id}
-            },
-            TableName: tableName
-        }).then(function (data) {
-            var tweet = new Tweet();
-            tweet.unserialize(data);
-            return tweet;
-        });
-    },
-
     /**
      * won't insert two tweets have same place and id attributes
      * @param {Tweet} tweet
@@ -107,11 +55,11 @@ Tweets = {
             Item: tweet.serialize(),
             TableName: tableName,
             // ensure unique insertion
-            ConditionExpression: 'attribute_not_exists(place) AND attribute_not_exists(id)'
+            ConditionExpression: 'attribute_not_exists(place_id) AND attribute_not_exists(tweet_id)'
         }).catch(function (error) {
             if (error.code === 'ConditionalCheckFailedException') {
                 errors.logWarn('data', 'duplicate data insertion occurs, with place ('
-                    + tweet.place + ') and id (' + tweet.id + ')');
+                    + tweet.place_id + ') and id (' + tweet.tweet_id + ')');
                 return;
             }
             // throw any other errors
