@@ -1,10 +1,37 @@
-/**
- * Created by lihe on 2/19/16.
- */
+// # API module
+// define routing rules for websocket
+var Promise = require('bluebird'),
+    _ = require('lodash'),
 
-function init(socket) {
-    socket.on('message', function () {
-    });
+    routing;
+
+function init() {
+    var es = require('./es');
+
+    // use closure here
+    exports.routing = function (socket) {
+        socket.on('search keywords', function (keywords) {
+            if (!_.isArray(keywords)) {
+                keywords = [keywords];
+            }
+            es.search({
+                body: {
+                    query: {
+                        query_string : {
+                            default_field : 'text',
+                            query : keywords.join(' OR ')
+                        }
+                    }
+                }
+            }).then(function (resp) {
+                socket.emit('keywords search', resp.hits.hits);
+            }, function (err) {
+                socket.emit('error', err);
+            });
+        });
+    };
+
+    return Promise.resolve();
 }
 
-module.exports = init;
+exports.init = init;

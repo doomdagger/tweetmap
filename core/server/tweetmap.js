@@ -41,7 +41,7 @@ Server.prototype.start = function () {
 
         // attach http server to socket.io
         socketApp.attach(self.httpServer);
-        socketApp.on('connection', api);
+        socketApp.on('connection', api.routing);
 
         self.httpServer.on('error', self.error);
         self.httpServer.on('connection', self.connection.bind(self));

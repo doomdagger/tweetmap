@@ -12,6 +12,7 @@ var express = require('express'),
     config = require('./config'),
     data = require('./data'),
     models = require('./models'),
+    api = require('./api'),
     Server = require('./tweetmap'),
 
     ONE_DAY_MS = 86400000;
@@ -37,6 +38,9 @@ function init(options) {
     }).then(function () {
         // Initialize data, start twitter streaming
         return data.init();
+    }).then(function () {
+        // Initialize elastic search singleton
+        return api.init();
     }).then(function () {
         // ##Configuration the express
         var logging = config.logging;

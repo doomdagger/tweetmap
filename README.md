@@ -135,3 +135,5 @@ curl -XPUT https://<your_es_endpoint>/_template/template_1 -d '
 }
 '
 ```
+
+At last, we run Logstash as an deamon on a EC2 instance to keep this process still going on. 

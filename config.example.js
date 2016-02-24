@@ -36,6 +36,12 @@ config = {
             },
             keywords: ['the', 'a', 'they', 'an', 'this', 'of', 'on', 'for',
                 'and', 'at', 'is', 'am', 'are', 'from', 'it', 'to']
+        },
+
+        es: {
+            host: 'search-tweetmap-pzchrvnjsct6seu5gckuh74amy.us-west-2.es.amazonaws.com',
+            port: '443',
+            ssl: true
         }
     },
 
@@ -79,6 +85,15 @@ config = {
             // keywords to filter
             keywords: ['the', 'a', 'they', 'an', 'this', 'of', 'on', 'for',
                 'and', 'at', 'is', 'am', 'are', 'from', 'it', 'to']
+        },
+
+        // ### Elastic search configuration
+        es: {
+            // AWS ES endpoint
+            host: 'search-tweetmap-pzchrvnjsct6seu5gckuh74amy.us-west-2.es.amazonaws.com',
+            // use https by default
+            port: '443',
+            ssl: true
         },
 
         logging: true
