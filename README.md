@@ -137,5 +137,86 @@ curl -XPUT https://<your_es_endpoint>/_template/template_1 -d '
 }
 '
 ```
+### Start our Daemon
 
-At last, we run Logstash as an deamon on a EC2 instance to keep this process still going on. 
+At last, we run Logstash as an deamon on a EC2 instance to keep this process still going on. I attach the init file here (only work on CentOS):
+
+```sh
+#!/bin/bash
+#
+# Logstash
+# Written by He Li. Logstash service will offer two sub-commands: start and stop
+# you need sudo to run this file, but the user owned the detached process will be
+# ec2-user.
+
+# Source function library.
+. /etc/init.d/functions
+
+# return value
+RETVAL=0
+
+# variables needed for logstash
+
+# basic variables
+prog="logstash"
+logstash_user=ec2-user
+logstash_dir=/home/${logstash_user}/logstash
+logstash_bin=${logstash_dir}/bin/logstash
+logstash_conf=${logstash_dir}/test4.conf
+
+# newly created files
+lock_file=${logstash_dir}/${prog}.lock
+pid_file=${logstash_dir}/${prog}.pid
+log_file=${logstash_dir}/${prog}.log
+
+start() {
+        echo -n "Starting $prog: "
+        if [ -s ${pid_file} ]; then
+                RETVAL=1
+                echo -n "$prog is already running! Try to run stop command first." && warning
+                echo
+        else
+                nohup ${logstash_bin} --verbose -f ${logstash_conf} --log ${log_file} >/dev/null 2>&1 &
+                RETVAL=$?
+                PID=$!
+                [ ${RETVAL} -eq 0 ] && touch ${lock_file} && success || failure
+                echo
+                echo ${PID} > ${pid_file}
+        fi
+}
+
+stop() {
+        echo -n "Shutting down $prog: "
+        if [ -s ${pid_file} ]; then
+                PID=`cat ${pid_file}`
+                kill -s 9 ${PID} && success || failure
+                RETVAL=$?
+                [ ${RETVAL} -eq 0 ] && rm -f ${lock_file} && rm -f ${pid_file}
+                echo
+        else
+                RETVAL=1
+                echo -n "$prog is not running! Try to run start command first." && warning
+                echo
+        fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $prog {start|stop|restart}"
+        exit 1
+        ;;
+esac
+exit ${RETVAL}
+```
+
+Put this file under `/etc/init.d/logstash`, and use `/etc/init.d/logstash start` to start streaming data.
