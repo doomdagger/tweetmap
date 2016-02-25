@@ -78,6 +78,8 @@ output {
         region => "us-west-2"
         aws_access_key_id => "<your_own_key_id>"
         aws_secret_access_key => "<your_own_access_key>"
+        # create an index for each day, we can use crontab to schedule periodical tasks to
+        # automatically delete old idices.
         index => "tweets-%{+YYYY.MM.dd}"
     }
     stdout { }
