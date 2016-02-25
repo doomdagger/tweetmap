@@ -173,7 +173,7 @@ start() {
         echo -n "Starting $prog: "
         if [ -s ${pid_file} ]; then
                 RETVAL=1
-                echo -n "$prog is already running! Try to run stop command first." && warning
+                echo -n "$prog is already running!" && warning
                 echo
         else
                 nohup ${logstash_bin} --verbose -f ${logstash_conf} --log ${log_file} >/dev/null 2>&1 &
@@ -195,7 +195,7 @@ stop() {
                 echo
         else
                 RETVAL=1
-                echo -n "$prog is not running! Try to run start command first." && warning
+                echo -n "$prog is not running!" && warning
                 echo
         fi
 }
