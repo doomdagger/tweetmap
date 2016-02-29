@@ -104,11 +104,18 @@ curl -XPUT https://<your_es_endpoint>/_template/template_1 -d '
         "@version" : {
           "type" : "string"
         },
-        "coordinates" : {
-          "type" : "geo_point"
-        },
         "host" : {
           "type" : "string"
+        },
+        "location" : {
+          "properties" : {
+            "coordinates" : {
+              "type" : "geo_point"
+            },
+            "type" : {
+              "type" : "string"
+            }
+          }
         },
         "place_id" : {
           "type" : "string"
