@@ -3,7 +3,7 @@
 var Promise = require('bluebird'),
     _ = require('lodash'),
 
-    page_size = 50;
+    pageSize = 50;
 
 function init() {
     var es = exports.es = require('./es');
@@ -22,8 +22,8 @@ function init() {
             var options = ops || {},
                 page = options.page || 0,
                 keywords = options.keywords || [],
-                // page configuration
-                from = page * page_size;
+            // page configuration
+                from = page * pageSize;
 
             // if it is not an array, make it an array
             if (!_.isArray(keywords)) {
@@ -32,7 +32,7 @@ function init() {
             // start search
             es.search({
                 from: from,
-                size: page_size,
+                size: pageSize,
                 body: {
                     query: {
                         query_string: {
@@ -64,15 +64,15 @@ function init() {
             var options = ops || {},
                 page = options.page || 0,
             // page configuration
-                from = page * page_size;
+                from = page * pageSize;
 
             // start search
             es.search({
                 from: from,
-                size: page_size,
+                size: pageSize,
                 body: {
-                    query : {
-                        match_all : {}
+                    query: {
+                        match_all: {}
                     }
                 }
             }).then(function (resp) {
@@ -105,16 +105,16 @@ function init() {
                 from: 0,
                 size: 100,
                 body: {
-                    query:{
+                    query: {
                         filtered: {
                             query: {
                                 match_all: {}
                             },
-                            filter : {
-                                geo_bounding_box : {
-                                    'location.coordinates' : {
-                                        top_left : ops.coordinates[0],
-                                        bottom_right : ops.coordinates[1]
+                            filter: {
+                                geo_bounding_box: {
+                                    'location.coordinates': {
+                                        top_left: ops.coordinates[0],
+                                        bottom_right: ops.coordinates[1]
                                     }
                                 }
                             }
