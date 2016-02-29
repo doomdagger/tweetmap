@@ -23,7 +23,10 @@ Tweet = function Tweet(rawObj) {
         this.text = rawObj.text;
         this.username = rawObj.user.screen_name;
         this.user_profile_image = rawObj.user.profile_image_url;
-        this.coordinates = [rawObj.coordinates.coordinates[0].toString(), rawObj.coordinates.coordinates[1].toString()];
+        this.location = {
+            type: rawObj.coordinates.type,
+            coordinates: [rawObj.coordinates.coordinates[0].toString(), rawObj.coordinates.coordinates[1].toString()]
+        };
         this.timestamp_ms = rawObj.timestamp_ms;
     }
 };
@@ -38,7 +41,12 @@ Tweet.prototype.serialize = function () {
         text: {S: self.text},
         username: {S: self.username},
         user_profile_image: {S: self.user_profile_image},
-        coordinates: {NS: self.coordinates},
+        location: {
+            M: {
+                type: {S: self.location.type},
+                coordinates: {NS: self.location.coordinates}
+            }
+        },
         timestamp_ms: {N: self.timestamp_ms}
     };
 };

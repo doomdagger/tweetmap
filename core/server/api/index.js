@@ -103,20 +103,25 @@ function init() {
             // start search
             es.search({
                 body: {
-                    query: {
-                        geo_shape: {
-                            location: {
-                                shape: {
-                                    type: 'envelope',
-                                    coordinates: ops.coordinates
+                    query:{
+                        filtered: {
+                            query: {
+                                match_all: {}
+                            },
+                            filter: {
+                                geo_shape: {
+                                    location: {
+                                        shape: {
+                                            type: "envelope",
+                                            coordinates : ops.coordinates
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }).then(function (resp) {
-                console.log('here');
-
                 // fetch source data, emit back
                 var tweets = resp.hits.hits;
                 tweets = _.map(tweets, function (tweet) {
