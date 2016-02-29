@@ -14,6 +14,17 @@ Following are the required steps:
 
 > Bonus: Use ElasticSearch’s (Links to an external site.) or CloudSearch’s (Links to an external site.) geospatial feature that shows tweets that are within a certain distance from the point the user clicks on the map. 
 
+## How to runt it
+
+```sh
+# install all needed dependencies
+$ npm install
+# start the application
+$ npm start
+```
+
+> The application by default listen on port 1222. See [config.example.js](https://github.com/doomdagger/tweetmap/blob/master/config.example.js) for details.
+
 ## Connect Dynamodb and Elastic search using Logstash
 
 Our application will keep fetching data from twitter using its streaming API. Then we forwards these data directly to Dynamodb (use dynamodb's `ConditionExpression` to implement uinque insertion). We need Logstash as a channel to transfer data from dynamodb to elasticsearch. Followings are the configuration steps.
