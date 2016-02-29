@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tweetmap</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:1222');
+    socket.on('keywords search', function (data) {
+        console.log(data);
+    });
+    socket.on('all search', function (data) {
+        console.log(data);
+    });
+    socket.on('geo search', function (data) {
+        console.log(data);
+    });
+    socket.on('error', function (err) {
+        console.log(err);
+    });
+    function keyword() {
+        socket.emit('search keywords', {page: 0, keywords:['job']});
+    }
+    function searchAll() {
+        socket.emit('search all', {page: 0});
+    }
+    function searchGeo() {
+        socket.emit('search geo', {coordinates: [[119.0, 16.0], [121.0, 14.0]]})
+    }
+</script>
+<body>
+
+<button onclick="keyword()">emit keyword</button>
+<button onclick="searchAll()">emit all</button>
+<button onclick="searchGeo()">emit geo</button>
+
+</body>
+</html>
