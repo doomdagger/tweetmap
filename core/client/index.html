@@ -10,8 +10,8 @@
         }
 
         #floating-panel {
-            bottom:0;
-            left:0;
+            bottom: 0;
+            left: 0;
             position: absolute;
             z-index: 1000;
         }
@@ -27,20 +27,18 @@
         }
     </style>
     <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
 </head>
 
 <body>
-
-
 <div id="floating-panel">
     <div class="ui segment">
         <button onclick="request('nyc');" class="ui inverted violet button">nyc</button>
         <button onclick="request('job');" class="ui inverted red button">job</button>
         <button onclick="request('eat');" class="ui inverted orange button">eat</button>
         <button onclick="request('study');" class="ui inverted yellow button">study</button>
-        <button onclick="request('China');" class="ui inverted olive button">China</button>
+        <button onclick="request('china');" class="ui inverted olive button">China</button>
         <button onclick="request('phone');" class="ui inverted green button">phone</button>
         <button onclick="request('friend');" class="ui inverted teal button">friend</button>
         <div class="ui buttons">
@@ -55,7 +53,7 @@
 <div id="coord"></div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqZvJUqsZ5Couc8uORXqsXn85H74fBGyc&callback=initMap"></script>
-<div style="display: none" id="myModel" class="ui basic modal" >
+<div style="display: none" id="myModel" class="ui basic modal">
     <div class="header">Instruction</div>
     <div class="content">
         <p>Click bottom tags for keyword search.</p>
@@ -67,21 +65,20 @@
         <div class="ui approve button">Ok</div>
     </div>
 </div>
-<script>
 
+<script>
     $('.ui.basic.modal')
             .modal('show');
 
     var map;
     var data_set = [];
     var marker_list = [];
-    var infowindow_list = [];
+    var infowindow = null;
     var socket = io('http://localhost:1222');
 
     var cur_keyword = "";
     var cur_page_number = 0;
     var search_coordinate = null;
-//    var infoShown = false;
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -97,17 +94,16 @@
                     'lng: ' + Math.round(event.latLng.lng());
         });
 
-        google.maps.event.addListener(map, 'click', function(event) {
-
+        google.maps.event.addListener(map, 'click', function (event) {
             search_coordinate = event.latLng;
             var request_coordinates = [[(search_coordinate.lng() - 1.0),
-                                        (search_coordinate.lat() + 1.0)],
-                                        [(search_coordinate.lng() + 1.0),
-                                        (search_coordinate.lat() - 1.0)]];
-            if(request_coordinates[0][0] < -180.0) request_coordinates[0][0] += 360.0;
-            if(request_coordinates[0][1] > 90.0) request_coordinates[0][1] -= 180.0;
-            if(request_coordinates[1][0] > 180.0) request_coordinates[1][0] -= 360.0;
-            if(request_coordinates[1][1] < -90.0) request_coordinates[1][1] += 180.0;
+                (search_coordinate.lat() + 1.0)],
+                [(search_coordinate.lng() + 1.0),
+                    (search_coordinate.lat() - 1.0)]];
+            if (request_coordinates[0][0] < -180.0) request_coordinates[0][0] += 360.0;
+            if (request_coordinates[0][1] > 90.0) request_coordinates[0][1] -= 180.0;
+            if (request_coordinates[1][0] > 180.0) request_coordinates[1][0] -= 360.0;
+            if (request_coordinates[1][1] < -90.0) request_coordinates[1][1] += 180.0;
 
             socket.emit('search geo', {coordinates: request_coordinates});
         });
@@ -122,7 +118,7 @@
                 map: map
             });
             marker.addListener('click', function () {
-                date = new Date(data.timestamp_ms);
+                if (infowindow) infowindow.setMap(null);
                 infowindow = new google.maps.InfoWindow({
                     content: makeContent([data])
                 });
@@ -141,10 +137,7 @@
         cur_keyword = "";
         cur_page_number = 0;
 
-        for (var i = 0; i < infowindow_list.length; i++) {
-            infowindow_list[i].setMap(null);
-        }
-        infowindow_list = [];
+        if (infowindow) infowindow.setMap(null);
         clearMarker();
     }
 
@@ -181,24 +174,24 @@
     }
 
     function makeContent(data) {
-        if(data.length == 0) return "No twitter nearby."
-        var contentString = '<div id="content">'+
-                '<div id="siteNotice">'+
-                '</div>'+
+        if (data.length == 0) return "No twitter nearby."
+        var contentString = '<div id="content">' +
+                '<div id="siteNotice">' +
+                '</div>' +
                 '<div id="bodyContent">' +
                 '<div class="ui comments">' +
                 '<h3 class="ui dividing header">Twitters Here</h3>';
         data.forEach(function (val) {
             contentString += '<div class="comment"><a class="avatar">' +
-                    '<img src="'+ val.user_profile_image +'"></a>' +
+                    '<img src="' + val.user_profile_image + '"></a>' +
                     '<div class="content">' +
                     '<a target="_blank" href="https://twitter.com/' + val.username + '/" class="author">' + val.username + '</a>' +
-                    '<div class="metadata"><span class="date">' + new Date(val.timestamp_ms) +'</span></div>' +
-                    '<div class="text">'+ val.text +'</div>' +
+                    '<div class="metadata"><span class="date">' + new Date(val.timestamp_ms) + '</span></div>' +
+                    '<div class="text">' + val.text + '</div>' +
                     '</div></div>';
         });
         contentString += '</div>' +
-                '</div>'+
+                '</div>' +
                 '</div>';
         return contentString;
     }
@@ -212,12 +205,12 @@
     });
 
     socket.on('geo search', function (data) {
-        var infowindow = new google.maps.InfoWindow({
+        if (infowindow) infowindow.setMap(null);
+        infowindow = new google.maps.InfoWindow({
             position: search_coordinate,
             content: makeContent(data),
             map: map
         });
-        infowindow_list.push(infowindow);
     });
 </script>
 </body>
