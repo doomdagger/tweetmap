@@ -96,10 +96,10 @@
 
         google.maps.event.addListener(map, 'click', function (event) {
             search_coordinate = event.latLng;
-            var request_coordinates = [[(search_coordinate.lng() - 0.5),
-                (search_coordinate.lat() + 0.5)],
-                [(search_coordinate.lng() + 0.5),
-                    (search_coordinate.lat() - 0.5)]];
+            var request_coordinates = [[(search_coordinate.lng() - 0.1),
+                (search_coordinate.lat() + 0.1)],
+                [(search_coordinate.lng() + 0.1),
+                    (search_coordinate.lat() - 0.1)]];
             if (request_coordinates[0][0] < -180.0) request_coordinates[0][0] += 360.0;
             if (request_coordinates[0][1] > 90.0) request_coordinates[0][1] = 90.0;
             if (request_coordinates[1][0] > 180.0) request_coordinates[1][0] -= 360.0;
@@ -174,20 +174,21 @@
     }
 
     function makeContent(data) {
-        if (data.length == 0) return "No twitter nearby."
+        if (data.length == 0) return '<div id="content"><div id="bodyContent"><h2 class="ui center aligned icon header">' +
+                '<i class="circular twitter icon"></i>No Tweets Here</h2></div></div>';
         var contentString = '<div id="content">' +
                 '<div id="siteNotice">' +
                 '</div>' +
                 '<div id="bodyContent">' +
                 '<div class="ui comments">' +
-                '<h3 class="ui dividing header">Twitters Here</h3>';
+                '<h3 class="ui dividing header"><i class="small twitter icon"></i>Twitters Here</h3>';
         data.forEach(function (val) {
             contentString += '<div class="comment"><a class="avatar">' +
                     '<img src="' + val.user_profile_image + '"></a>' +
                     '<div class="content">' +
                     '<a target="_blank" href="https://twitter.com/' + val.username + '/" class="author">' + val.username + '</a>' +
                     '<div class="metadata"><span class="date">' + new Date(val.timestamp_ms) + '</span></div>' +
-                    '<div class="text">' + val.text + '</div>' +
+                    '<div class="text"><a target="_blank" href="https://twitter.com/'+val.username+'/status/'+val.tweet_id+'">' + val.text + '</a></div>' +
                     '</div></div>';
         });
         contentString += '</div>' +
