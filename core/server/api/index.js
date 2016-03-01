@@ -103,19 +103,14 @@ function init() {
             // start search
             es.search({
                 from: 0,
-                size: 100,
+                size: 300,
                 body: {
                     query: {
-                        filtered: {
-                            query: {
-                                match_all: {}
-                            },
-                            filter: {
-                                geo_bounding_box: {
-                                    'location.coordinates': {
-                                        top_left: ops.coordinates[0],
-                                        bottom_right: ops.coordinates[1]
-                                    }
+                        geo_shape: {
+                            location: {
+                                shape: {
+                                    type: 'envelope',
+                                    coordinates: ops.coordinates
                                 }
                             }
                         }

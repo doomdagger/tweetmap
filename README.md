@@ -118,15 +118,10 @@ curl -XPUT https://<your_es_endpoint>/_template/template_1 -d '
         "host" : {
           "type" : "string"
         },
-        "location" : {
-          "properties" : {
-            "coordinates" : {
-              "type" : "geo_point"
-            },
-            "type" : {
-              "type" : "string"
-            }
-          }
+        "location": {
+          "type": "geo_shape",
+          "tree": "quadtree",
+          "precision": "1m"
         },
         "place_id" : {
           "type" : "string"

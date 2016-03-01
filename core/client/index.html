@@ -96,14 +96,14 @@
 
         google.maps.event.addListener(map, 'click', function (event) {
             search_coordinate = event.latLng;
-            var request_coordinates = [[(search_coordinate.lng() - 1.0),
-                (search_coordinate.lat() + 1.0)],
-                [(search_coordinate.lng() + 1.0),
-                    (search_coordinate.lat() - 1.0)]];
+            var request_coordinates = [[(search_coordinate.lng() - 0.5),
+                (search_coordinate.lat() + 0.5)],
+                [(search_coordinate.lng() + 0.5),
+                    (search_coordinate.lat() - 0.5)]];
             if (request_coordinates[0][0] < -180.0) request_coordinates[0][0] += 360.0;
-            if (request_coordinates[0][1] > 90.0) request_coordinates[0][1] -= 180.0;
+            if (request_coordinates[0][1] > 90.0) request_coordinates[0][1] = 90.0;
             if (request_coordinates[1][0] > 180.0) request_coordinates[1][0] -= 360.0;
-            if (request_coordinates[1][1] < -90.0) request_coordinates[1][1] += 180.0;
+            if (request_coordinates[1][1] < -90.0) request_coordinates[1][1] = -90.0;
 
             socket.emit('search geo', {coordinates: request_coordinates});
         });
@@ -211,6 +211,9 @@
             content: makeContent(data),
             map: map
         });
+    });
+    socket.on('error', function(err) {
+        console.log(err);
     });
 </script>
 </body>
