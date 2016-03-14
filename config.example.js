@@ -18,6 +18,7 @@ config = {
             port: '80'
         },
 
+        // stop trying to use the access key, they are all revoked!!!
         aws: {
             accessKeyId: 'AKIAJGQRH6BB352BJGQQ',
             secretAccessKey: '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',
@@ -25,7 +26,7 @@ config = {
             apiVersion: '2016-02-19',
             sslEnabled: true
         },
-
+        // stop trying to use the access key, they are all revoked!!!
         twitter: {
             auth: {
                 consumer_key: 'ATBHdskAbAzEbXRs9qXPrZek5',
@@ -58,7 +59,7 @@ config = {
             // Port to be passed to node's `net.Server#listen()`
             port: process.env.PORT || '1222'
         },
-
+        // stop trying to use the access key, they are all revoked!!!
         // ### AWS configuration
         aws: {
             // credentials
@@ -70,7 +71,7 @@ config = {
             apiVersion: '2016-02-19',
             sslEnabled: true
         },
-
+        // stop trying to use the access key, they are all revoked!!!
         // ### Twitter Stream API configuration
         twitter: {
             // Application Credentials (Readonly)
